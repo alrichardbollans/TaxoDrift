@@ -29,40 +29,28 @@ def get_accepted_name_from_record(record: pd.DataFrame, reported_name: str):
             return None
 
 
-def compare_two_versions(v12_taxa: pd.DataFrame, v13_taxa: pd.DataFrame, old_tag: str, new_tag: str):
-    # For all taxa with unique names (inc. author strings) in old taxon database
-    # If the name resolves uniquely to a non-nan accepted name in both the old and new database
-    # Find the accepted name resolution when the name is resolved first to the old taxonomy then the new taxonomy
-    # If no such name exists, add to cases_that_cant_update
-    # else, check if this name is the same as the name when directly resolved using the new database. If not, store in out_dict
-    out_dir = os.path.join(_output_path,
-                           '_'.join([old_tag, new_tag]))
-    os.makedirs(out_dir, exist_ok=True)
-
-    v12_taxa['taxon_name_w_authors'] = add_authors_to_col(v12_taxa, 'taxon_name')
-    v13_taxa['taxon_name_w_authors'] = add_authors_to_col(v13_taxa, 'taxon_name')
-
+def chain_two_databases(older_taxa_version: pd.DataFrame, newer_taxa_version: pd.DataFrame, old_tag: str, new_tag: str, out_dir: str):
     # Pick non-duplicated names
-    unique_names = v12_taxa['taxon_name_w_authors'].dropna().unique().tolist()
+    unique_names = older_taxa_version['taxon_name_w_authors'].dropna().unique().tolist()
 
     # Collect the records in the old and new database directly
     # relevant records
-    v12_records = v12_taxa[v12_taxa['taxon_name_w_authors'].isin(unique_names)][
+    v12_records = older_taxa_version[older_taxa_version['taxon_name_w_authors'].isin(unique_names)][
         ['taxon_name_w_authors', 'accepted_name_w_author']]
     v12_records = v12_records.dropna(subset=['accepted_name_w_author'])
     v12_records = v12_records.drop_duplicates(keep='first')
     v12_records = v12_records.drop_duplicates(subset=['taxon_name_w_authors'],
                                               keep=False)  # Ignore cases with multiple resolutions, as these are ambiguous anyway
     # I think Cubeba Raf. and Lamottea Pomel are examples but they are less interesting for this analysis
-
-    v12_records = v12_records.rename(
-        columns={'accepted_name_w_author': old_tag + '_accepted_name_w_author'})
-    v12_records.describe(include='all').to_csv(os.path.join(out_dir, 'old_records_summary.csv'))
+    if out_dir is not None:
+        v12_records = v12_records.rename(
+            columns={'accepted_name_w_author': old_tag + '_accepted_name_w_author'})
+        v12_records.describe(include='all').to_csv(os.path.join(out_dir, old_tag + '_old_records_summary.csv'))
 
     # accepted names in old database
     relevant_v13_names_for_chaining = v12_records[old_tag + '_accepted_name_w_author'].dropna().unique().tolist()
     # names in new database where taxon name is accepted name in old database
-    v13_records_for_chaining = v13_taxa[v13_taxa['taxon_name_w_authors'].isin(relevant_v13_names_for_chaining)][
+    v13_records_for_chaining = newer_taxa_version[newer_taxa_version['taxon_name_w_authors'].isin(relevant_v13_names_for_chaining)][
         ['taxon_name_w_authors', 'accepted_name_w_author', 'accepted_species_w_author']]
     v13_records_for_chaining = v13_records_for_chaining.drop_duplicates(keep='first')
     v13_records_for_chaining = v13_records_for_chaining.drop_duplicates(subset=['taxon_name_w_authors'],
@@ -73,7 +61,13 @@ def compare_two_versions(v12_taxa: pd.DataFrame, v13_taxa: pd.DataFrame, old_tag
     # chained result where taxon_name_w_authors are resolved to v13_chained_accepted_name_w_author, mediated by old database
     chained_updated_records = pd.merge(v12_records, v13_records_for_chaining, left_on=old_tag + '_accepted_name_w_author',
                                        right_on=new_tag + '_taxon_name_w_authors')
-    chained_updated_records.describe(include='all').to_csv(os.path.join(out_dir, 'chained_updated_records_summary.csv'))
+
+    return chained_updated_records
+
+
+def get_direct_name_updates(v12_taxa: pd.DataFrame, v13_taxa: pd.DataFrame, new_tag: str, out_dir: str):
+    # Pick non-duplicated names
+    unique_names = v12_taxa['taxon_name_w_authors'].dropna().unique().tolist()
 
     # relevant names in new database where taxon name is taxon name in old database
     v13_updated_records = v13_taxa[v13_taxa['taxon_name_w_authors'].isin(unique_names)][
@@ -87,11 +81,15 @@ def compare_two_versions(v12_taxa: pd.DataFrame, v13_taxa: pd.DataFrame, old_tag
                  'accepted_species_w_author': new_tag + '_direct_accepted_species_w_author'})
     v13_updated_records.describe(include='all').to_csv(os.path.join(out_dir, 'direct_updated_records_summary.csv'))
 
-    # direct result where taxon_name_w_authors are resolved directly to the new databse
-    merged_df = pd.merge(chained_updated_records, v13_updated_records, on='taxon_name_w_authors')
+    return v13_updated_records
 
-    results_df = merged_df[merged_df[new_tag + '_direct_accepted_name_w_author'] != merged_df[new_tag + '_chained_accepted_name_w_author']]
-    results_df = results_df.dropna(subset=[new_tag + '_direct_accepted_name_w_author'])
+
+def compare_and_output_chained_and_direct_updates(chained_updated_records, direct_updated_records, old_tag: str, new_tag: str, out_dir: str):
+    merged_df = pd.merge(chained_updated_records, direct_updated_records, on='taxon_name_w_authors')
+
+    results_df = merged_df.dropna(subset=[new_tag + '_direct_accepted_name_w_author'])
+    results_df.to_csv(os.path.join('outputs', 'full_chain', '_'.join([old_tag, new_tag]) + '.csv'))
+    results_df = results_df[results_df[new_tag + '_direct_accepted_name_w_author'] != merged_df[new_tag + '_chained_accepted_name_w_author']]
 
     # Add longer chains
 
@@ -122,14 +120,31 @@ def compare_two_versions(v12_taxa: pd.DataFrame, v13_taxa: pd.DataFrame, old_tag
     return results_df
 
 
-def main():
-    v12_taxa = get_all_taxa(version='12')
-    v13_taxa = get_all_taxa(version=None)
+def compare_two_versions(v12_taxa: pd.DataFrame, v13_taxa: pd.DataFrame, old_tag: str, new_tag: str):
+    # For all taxa with unique names (inc. author strings) in old taxon database
+    # If the name resolves uniquely to a non-nan accepted name in both the old and new database
+    # Find the accepted name resolution when the name is resolved first to the old taxonomy then the new taxonomy
+    # If no such name exists, add to cases_that_cant_update
+    # else, check if this name is the same as the name when directly resolved using the new database. If not, store in out_dict
+    out_dir = os.path.join(_output_path,
+                           '_'.join([old_tag, new_tag]))
+    os.makedirs(out_dir, exist_ok=True)
+
+    chained_updated_records = chain_two_databases(v12_taxa, v13_taxa, old_tag, new_tag, out_dir)
+    chained_updated_records.describe(include='all').to_csv(os.path.join(out_dir, 'chained_updated_records_summary.csv'))
+
+    # relevant names in new database where taxon name is taxon name in old database
+    v13_updated_records = get_direct_name_updates(v12_taxa, v13_taxa, new_tag, out_dir)
+    results_df = compare_and_output_chained_and_direct_updates(chained_updated_records, v13_updated_records, old_tag, new_tag, out_dir)
+    return results_df
+
+
+def compare_all_pairs():
+    v10_taxa, v11_taxa, v12_taxa, v13_taxa = get_all_databases()
+
     compare_two_versions(v12_taxa, v13_taxa, 'v12', 'v13')
-    v10_taxa = get_all_taxa(version='10')
     compare_two_versions(v10_taxa, v13_taxa,
                          'v10', 'v13')
-    v11_taxa = get_all_taxa(version='11')
     compare_two_versions(v11_taxa, v13_taxa,
                          'v11', 'v13')
 
@@ -139,5 +154,53 @@ def main():
                          'v11', 'v12')
 
 
+def full_chain_results():
+    # Note when chaining like this, in intermediary steps ambiguous/non resolving names may be dropped.
+    # This may somewhat reflect real world situations but is optimistic about the chaining process
+    out_dir = os.path.join('outputs', 'full_chain')
+    v10_taxa, v11_taxa, v12_taxa, v13_taxa = get_all_databases()
+    # Start with 10 -> 11
+    v10_11_chained = chain_two_databases(v10_taxa, v11_taxa, 'v10', 'v11', out_dir)
+    v10_11_chained = v10_11_chained.rename(columns={'v11_chained_accepted_name_w_author': 'accepted_name_w_author'})
+    v10_11_chained = v10_11_chained[['taxon_name_w_authors', 'accepted_name_w_author']]
+
+    # Then chain -> 12
+    v10_11_12_chained = chain_two_databases(v10_11_chained, v12_taxa, 'v10_11', 'v12', out_dir)
+    v10_11_12_chained = v10_11_12_chained.rename(columns={'v12_chained_accepted_name_w_author': 'accepted_name_w_author'})
+    v10_11_12_chained = v10_11_12_chained[['taxon_name_w_authors', 'accepted_name_w_author']]
+
+    # Then -> 13
+    v10_11_12_13_chained = chain_two_databases(v10_11_12_chained, v13_taxa, 'v10_11_12', 'v13', out_dir)
+
+    direct_updated_records = get_direct_name_updates(v10_taxa, v13_taxa, 'v13', out_dir)
+    results_df = compare_and_output_chained_and_direct_updates(v10_11_12_13_chained, direct_updated_records, 'v10_11_12', 'v13', out_dir)
+    pass
+
+
+def get_all_databases():
+    # v10_taxa = get_all_taxa(version='10')
+    # v11_taxa = get_all_taxa(version='11')
+    # v12_taxa = get_all_taxa(version='12')
+    # v13_taxa = get_all_taxa(version=None)
+    #
+    # v10_taxa.to_csv(os.path.join('inputs', 'v10_taxa.csv'))
+    # v11_taxa.to_csv(os.path.join('inputs', 'v11_taxa.csv'))
+    # v12_taxa.to_csv(os.path.join('inputs', 'v12_taxa.csv'))
+    # v13_taxa.to_csv(os.path.join('inputs', 'v13_taxa.csv'))
+
+    v10_taxa = pd.read_csv(os.path.join('inputs', 'v10_taxa.csv'), index_col=0)
+    v11_taxa = pd.read_csv(os.path.join('inputs', 'v11_taxa.csv'), index_col=0)
+    v12_taxa = pd.read_csv(os.path.join('inputs', 'v12_taxa.csv'), index_col=0)
+    v13_taxa = pd.read_csv(os.path.join('inputs', 'v13_taxa.csv'), index_col=0)
+
+    v10_taxa['taxon_name_w_authors'] = add_authors_to_col(v10_taxa, 'taxon_name')
+    v11_taxa['taxon_name_w_authors'] = add_authors_to_col(v11_taxa, 'taxon_name')
+    v12_taxa['taxon_name_w_authors'] = add_authors_to_col(v12_taxa, 'taxon_name')
+    v13_taxa['taxon_name_w_authors'] = add_authors_to_col(v13_taxa, 'taxon_name')
+
+    return v10_taxa, v11_taxa, v12_taxa, v13_taxa
+
+
 if __name__ == '__main__':
-    main()
+    # compare_all_pairs()
+    full_chain_results()

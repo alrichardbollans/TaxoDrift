@@ -1,5 +1,5 @@
 ,taxon_name_w_authors,v10_accepted_name_w_author,v11_taxon_name_w_authors,v11_chained_accepted_name_w_author,v11_chained_accepted_species_w_author,v11_direct_accepted_name_w_author,v11_direct_accepted_species_w_author
-count,1442,1442,1442,1430,1427,1442,1442
-unique,1442,758,758,753,742,808,792
+count,1445,1445,1445,1433,1430,1445,1445
+unique,1445,761,761,756,745,811,795
 top,Ajuga nanti Boreau,Leea indica (Burm.f.) Merr.,Leea indica (Burm.f.) Merr.,Leea indica (Burm.f.) Merr.,Leea indica (Burm.f.) Merr.,Leea javanica Blume,Leea javanica Blume
 freq,1,32,32,32,32,31,31
