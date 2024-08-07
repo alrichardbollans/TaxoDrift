@@ -1,0 +1,5 @@
+,taxon_name_w_authors,v10_accepted_name_w_author,v11_taxon_name_w_authors,v11_chained_accepted_name_w_author,v11_chained_accepted_species_w_author,v11_direct_accepted_name_w_author,v11_direct_accepted_species_w_author,v11_chained_accepted_genus,v11_direct_accepted_genus
+count,146,146,146,134,131,146,146,131,146
+unique,146,85,85,81,79,89,87,76,81
+top,Attalea polysticha (Burret) Wess.Boer,Attalea microcarpa Mart.,Attalea microcarpa Mart.,Echinopsis densispina Werderm.,Glycosmis cochinchinensis (Lour.) Pierre ex Engl.,Attalea sagotii (Trail ex Thurn) Wess.Boer,Attalea sagotii (Trail ex Thurn) Wess.Boer,Glycosmis,Attalea
+freq,1,7,7,6,6,7,7,6,7

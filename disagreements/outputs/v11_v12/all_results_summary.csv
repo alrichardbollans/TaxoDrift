@@ -1,0 +1,5 @@
+,taxon_name_w_authors,v11_accepted_name_w_author,v12_taxon_name_w_authors,v12_chained_accepted_name_w_author,v12_chained_accepted_species_w_author,v12_direct_accepted_name_w_author,v12_direct_accepted_species_w_author
+count,4138,4138,4138,4127,4056,4138,4068
+unique,4138,1521,1521,1517,1444,1672,1519
+top,Sedum taiwanianum S.S.Ying,Sorghum bicolor (L.) Moench,Sorghum bicolor (L.) Moench,Sorghum bicolor (L.) Moench,Sorghum bicolor (L.) Moench,Sorghum bicolor subsp. bicolor,Sorghum bicolor (L.) Moench
+freq,1,330,330,330,330,330,330
