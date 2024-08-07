@@ -87,9 +87,16 @@ def get_direct_name_updates(v12_taxa: pd.DataFrame, v13_taxa: pd.DataFrame, new_
 def compare_and_output_chained_and_direct_updates(chained_updated_records, direct_updated_records, old_tag: str, new_tag: str, out_dir: str):
     merged_df = pd.merge(chained_updated_records, direct_updated_records, on='taxon_name_w_authors')
 
+    # remove cases with no direct accepted name in new version
     results_df = merged_df.dropna(subset=[new_tag + '_direct_accepted_name_w_author'])
-    results_df.to_csv(os.path.join('outputs', 'full_chain', '_'.join([old_tag, new_tag]) + '.csv'))
-    results_df = results_df[results_df[new_tag + '_direct_accepted_name_w_author'] != merged_df[new_tag + '_chained_accepted_name_w_author']]
+
+    # get results with no resolution from chaining
+    unresolved_via_chaining = results_df[results_df[new_tag + '_chained_accepted_name_w_author'].isna()]
+    unresolved_via_chaining.to_csv(os.path.join(out_dir, '_'.join([old_tag, new_tag]) + '_unresolved_via_chaining.csv'))
+
+    results_df = results_df.dropna(subset=[new_tag + '_chained_accepted_name_w_author'])
+    results_df.to_csv(os.path.join(out_dir, '_'.join([old_tag, new_tag]) + '.csv'))
+    results_df = results_df[results_df[new_tag + '_direct_accepted_name_w_author'] != results_df[new_tag + '_chained_accepted_name_w_author']]
 
     # Add longer chains
 
@@ -117,6 +124,8 @@ def compare_and_output_chained_and_direct_updates(chained_updated_records, direc
     # cases_that_cant_update_df.to_csv(os.path.join(out_dir, 'v12_v13_cases_cant_update.csv'))
     # names_in_old_with_multiple_resolutions_df.to_csv(os.path.join(out_dir, 'v12_v13_names_in_old_with_multiple_resolutions.csv'))
 
+    # do full summary
+
     return results_df
 
 
@@ -142,7 +151,7 @@ def compare_two_versions(v12_taxa: pd.DataFrame, v13_taxa: pd.DataFrame, old_tag
 def compare_all_pairs():
     v10_taxa, v11_taxa, v12_taxa, v13_taxa = get_all_databases()
 
-    compare_two_versions(v12_taxa, v13_taxa, 'v12', 'v13')
+    # compare_two_versions(v12_taxa, v13_taxa, 'v12', 'v13')
     compare_two_versions(v10_taxa, v13_taxa,
                          'v10', 'v13')
     compare_two_versions(v11_taxa, v13_taxa,
@@ -201,6 +210,31 @@ def get_all_databases():
     return v10_taxa, v11_taxa, v12_taxa, v13_taxa
 
 
+def summarise_results():
+    old_record_summary = pd.read_csv(os.path.join('outputs', 'v10_v13', 'v10_old_records_summary.csv'), index_col=0)
+    num_of_original_names = int(old_record_summary.at['unique', 'taxon_name_w_authors'])
+
+    total_results = pd.read_csv(os.path.join('outputs', 'v10_v13', 'all_results.csv'))
+    num_total_results = len(total_results['taxon_name_w_authors'].unique().tolist())
+
+    species_results = pd.read_csv(os.path.join('outputs', 'v10_v13', 'species_results.csv'))
+    num_species_results = len(species_results['taxon_name_w_authors'].unique().tolist())
+
+    genus_results = pd.read_csv(os.path.join('outputs', 'v10_v13', 'genus_results.csv'))
+    num_genus_results = len(genus_results['taxon_name_w_authors'].unique().tolist())
+
+    unresolved = pd.read_csv(os.path.join('outputs', 'v10_v13', 'v10_v13_unresolved_via_chaining.csv'))
+    num_unresolved = len(unresolved['taxon_name_w_authors'].unique().tolist())
+
+
+    out_df = pd.DataFrame([num_of_original_names, num_total_results, num_species_results, num_genus_results, num_unresolved])
+    out_df.columns = ['v10_v13']
+    out_df.index = ['original_names', 'total_disagreements', 'species_disagreements', 'genus_disagreements', 'unresolved_via_chaining']
+    out_df.to_csv(os.path.join('outputs', 'v10_v13', 'result_summary.csv'))
+    pass
+
+
 if __name__ == '__main__':
     # compare_all_pairs()
-    full_chain_results()
+    # full_chain_results()
+    summarise_results()
