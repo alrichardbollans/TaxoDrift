@@ -1,4 +1,4 @@
-## Transitivity of Scientific Names
+## Assessing Transitivity of the Resolution of Scientific Names
 
 Accepted scientific names are used by botanists to standardise taxonomic classifications of specimens based on authoritative taxonomic
 databases. These databases are continuously rearranged to reflect growing understanding of how plants relate to one another, and so
@@ -8,6 +8,27 @@ to their corresponding accepted names as indicated by current taxonomic research
 resolution across versions of taxonomic databases, i.e. if Name A resolves to Name B as the `
 accepted' name in an early version of a database, and Name B resolves to Name C in a later version, will Name A also resolve to Name C in that later
 version?
+
+## To cite
+
+[Storing accepted scientific names alone can lead to misinterpretation of botanical data](https://doi.org/10.1038/s41598-026-47142-0).
+
+```
+@article{richard-bollans_storing_2026,
+	title = {Storing accepted scientific names alone can lead to misinterpretation of botanical data},
+	volume = {16},
+	issn = {2045-2322},
+	url = {https://www.nature.com/articles/s41598-026-47142-0},
+	doi = {10.1038/s41598-026-47142-0},
+	number = {1},
+	urldate = {2026-07-20},
+	journal = {Scientific Reports},
+	author = {Richard-Bollans, Adam and Allkin, Bob and Civita, Francesco and Patmore, Kristina and Govaerts, Rafaël},
+	month = apr,
+	year = {2026},
+	pages = {22651},
+}
+```
 
 ### Licence
 
