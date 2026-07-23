@@ -1,0 +1,5 @@
+,taxon_name_w_authors,v10_accepted_name_w_author,v16_taxon_name_w_authors,v16_chained_accepted_name_w_author,v16_chained_accepted_species,v16_direct_accepted_name_w_author,v16_direct_accepted_species,v16_chained_accepted_genus,v16_direct_accepted_genus
+count,9345,9345,9345,9345,8937,9345,8936,9345,9345
+unique,9345,3660,3660,3640,3405,4337,3990,1583,1645
+top,Austrocylindropuntia colubrina (A.Cast.) Backeb.,Persicaria amphibia (L.) Delarbre,Persicaria amphibia (L.) Delarbre,Persicaria amphibia (L.) Delarbre,Persicaria amphibia,Persicaria coccinea (Muhl. ex Willd.) Greene,Persicaria coccinea,Rubus,Rubus
+freq,1,112,112,112,112,112,112,198,198

@@ -3,7 +3,23 @@ from analysis.analyse_number_of_changes.helper_functions import do_all_analyses_
 
 
 def main():
-    v10_taxa, v11_taxa, v12_taxa, v13_taxa, v14_taxa = get_all_databases()
+    v10_taxa, v11_taxa, v12_taxa, v13_taxa, v14_taxa, v15_taxa, v16_taxa = get_all_databases()
+
+    ## v16
+    do_all_analyses_for_a_pair(v10_taxa, v16_taxa, 'v10', 'v16')
+    do_all_analyses_for_a_pair(v11_taxa, v16_taxa, 'v11', 'v16')
+    do_all_analyses_for_a_pair(v12_taxa, v16_taxa, 'v12', 'v16')
+    do_all_analyses_for_a_pair(v13_taxa, v16_taxa, 'v13', 'v16')
+    do_all_analyses_for_a_pair(v14_taxa, v16_taxa, 'v14', 'v16')
+    do_all_analyses_for_a_pair(v15_taxa, v16_taxa, 'v15', 'v16')
+
+    ## v15
+    do_all_analyses_for_a_pair(v10_taxa, v15_taxa, 'v10', 'v15')
+    do_all_analyses_for_a_pair(v11_taxa, v15_taxa, 'v11', 'v15')
+    do_all_analyses_for_a_pair(v12_taxa, v15_taxa, 'v12', 'v15')
+    do_all_analyses_for_a_pair(v13_taxa, v15_taxa, 'v13', 'v15')
+    do_all_analyses_for_a_pair(v14_taxa, v15_taxa, 'v14', 'v15')
+
     ## v14
     do_all_analyses_for_a_pair(v10_taxa, v14_taxa, 'v10', 'v14')
     do_all_analyses_for_a_pair(v11_taxa, v14_taxa, 'v11', 'v14')

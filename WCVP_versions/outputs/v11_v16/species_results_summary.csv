@@ -1,0 +1,5 @@
+,taxon_name_w_authors,v11_accepted_name_w_author,v16_taxon_name_w_authors,v16_chained_accepted_name_w_author,v16_chained_accepted_species,v16_direct_accepted_name_w_author,v16_direct_accepted_species,v16_chained_accepted_genus,v16_direct_accepted_genus
+count,8186,8186,8186,8186,7820,8186,7816,8186,8186
+unique,8186,3081,3081,3066,2864,3650,3351,1404,1455
+top,Viola tricolor var. ruralis (Jord. ex Boreau) Corb.,Persicaria amphibia (L.) Delarbre,Persicaria amphibia (L.) Delarbre,Persicaria amphibia (L.) Delarbre,Persicaria amphibia,Persicaria coccinea (Muhl. ex Willd.) Greene,Persicaria coccinea,Rubus,Rubus
+freq,1,112,112,112,112,112,112,196,196

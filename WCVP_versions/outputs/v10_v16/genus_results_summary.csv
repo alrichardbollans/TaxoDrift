@@ -1,0 +1,5 @@
+,taxon_name_w_authors,v10_accepted_name_w_author,v16_taxon_name_w_authors,v16_chained_accepted_name_w_author,v16_chained_accepted_species,v16_direct_accepted_name_w_author,v16_direct_accepted_species,v16_chained_accepted_genus,v16_direct_accepted_genus
+count,914,914,914,914,513,914,515,914,914
+unique,914,495,495,494,291,566,296,454,505
+top,Austrocylindropuntia colubrina (A.Cast.) Backeb.,Eria javanica (Sw.) Blume,Eria javanica (Sw.) Blume,Bulbophyllum gibbosum (Blume) Lindl.,Bulbophyllum gibbosum,Phyllanthus L.,Eria stellata,Bulbophyllum,Eria
+freq,1,22,22,22,22,21,21,22,23

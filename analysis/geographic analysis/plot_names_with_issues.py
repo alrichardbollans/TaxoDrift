@@ -12,16 +12,16 @@ from wcvpy.wcvp_download import plot_native_number_accepted_taxa_in_regions, wcv
 
 from analysis.analyse_number_of_changes.helper_functions import this_repo_path
 
-_input_path = os.path.join(this_repo_path, 'WCVP_versions', 'outputs', 'v10_v14')
+_input_path = os.path.join(this_repo_path, 'WCVP_versions', 'outputs', 'v10_v16')
 issue_df = pd.read_csv(os.path.join(_input_path, 'species_results.csv'))
 v10_taxa = pd.read_csv(os.path.join(this_repo_path, 'WCVP_versions', 'inputs', 'v10_taxa.csv'))
 v10_taxa['taxon_name_w_authors'] = add_authors_to_col(v10_taxa, 'taxon_name')
-v14_taxa = pd.read_csv(os.path.join(this_repo_path, 'WCVP_versions', 'inputs', 'v14_taxa.csv'))
-v14_taxa['taxon_name_w_authors'] = add_authors_to_col(v14_taxa, 'taxon_name')
+v16_taxa = pd.read_csv(os.path.join(this_repo_path, 'WCVP_versions', 'inputs', 'v16_taxa.csv'))
+v16_taxa['taxon_name_w_authors'] = add_authors_to_col(v16_taxa, 'taxon_name')
 
 
 def plot_names_with_issues():
-    ### We could either look at v10 accepted names or v14 accepted names.
+    ### We could either look at v10 accepted names or v16 accepted names.
     v10_issues = issue_df[['v10_accepted_name_w_author']]
     v10_issues = v10_issues.rename(columns={'v10_accepted_name_w_author': 'accepted_name_w_author'})
     v10_issues = v10_issues.merge(v10_taxa, how='left', left_on='accepted_name_w_author', right_on='taxon_name_w_authors')
@@ -41,47 +41,49 @@ def plot_names_with_issues():
     # global distribution of underlying population
     v10_to_plot = v10_taxa.dropna(subset=[wcvp_accepted_columns['species']])
     # More cases where accepted species (derived from binomial name of accepted infraspecies) are not accepted.
-    v10_to_plot = v10_to_plot[~v10_to_plot[wcvp_accepted_columns['species']].isin(['Thymus × saxicola', 'Echinopsis bridgesii', 'Indigofera flaccida', 'Staurogyne polybotrya', 'Globulea atropurpurea'])]
+    v10_to_plot = v10_to_plot[~v10_to_plot[wcvp_accepted_columns['species']].isin(
+        ['Thymus × saxicola', 'Echinopsis bridgesii', 'Indigofera flaccida', 'Staurogyne polybotrya', 'Globulea atropurpurea'])]
     plot_native_number_accepted_taxa_in_regions(v10_to_plot, wcvp_accepted_columns['species'], os.path.join('outputs'),
                                                 'underlying_species_distributions_v10.jpg', include_extinct=True, wcvp_version='10',
                                                 colormap='inferno')
 
-    ### V14 cases
-    chained_issue_df = issue_df.dropna(subset=['v14_chained_accepted_species'])
-    plot_native_number_accepted_taxa_in_regions(chained_issue_df, 'v14_chained_accepted_species', os.path.join('outputs'),
-                                                'v14_species_issues_chained.jpg', include_extinct=True, wcvp_version=None,
+    ### V16 cases
+    chained_issue_df = issue_df.dropna(subset=['v16_chained_accepted_species'])
+    plot_native_number_accepted_taxa_in_regions(chained_issue_df, 'v16_chained_accepted_species', os.path.join('outputs'),
+                                                'v16_species_issues_chained.jpg', include_extinct=True, wcvp_version=None,
                                                 colormap='inferno')
-    direct_issue_df = issue_df.dropna(subset=['v14_direct_accepted_species'])
-    direct_issue_df = direct_issue_df[direct_issue_df['v14_direct_accepted_species'] != 'Fagus moesiaca']
-    plot_native_number_accepted_taxa_in_regions(direct_issue_df, 'v14_direct_accepted_species', os.path.join('outputs'),
-                                                'v14_species_issues_direct.jpg', include_extinct=True, wcvp_version=None,
+    direct_issue_df = issue_df.dropna(subset=['v16_direct_accepted_species'])
+    direct_issue_df = direct_issue_df[direct_issue_df['v16_direct_accepted_species'] != 'Fagus moesiaca']
+    plot_native_number_accepted_taxa_in_regions(direct_issue_df, 'v16_direct_accepted_species', os.path.join('outputs'),
+                                                'v16_species_issues_direct.jpg', include_extinct=True, wcvp_version=None,
                                                 colormap='inferno')
 
-    all_v14_issue_df = chained_issue_df[['v14_chained_accepted_species']]
-    all_v14_issue_df = all_v14_issue_df.rename(columns={'v14_chained_accepted_species': 'v14_accepted_species'})
-    direct_issue_df = direct_issue_df.rename(columns={'v14_direct_accepted_species': 'v14_accepted_species'})
-    direct_issue_df = direct_issue_df[['v14_accepted_species']]
-    all_v14_issue_df = pd.concat([all_v14_issue_df, direct_issue_df])
-    plot_native_number_accepted_taxa_in_regions(all_v14_issue_df, 'v14_accepted_species', os.path.join('outputs'),
-                                                'v14_species_issues_all.jpg', include_extinct=True, wcvp_version=None,
+    all_v16_issue_df = chained_issue_df[['v16_chained_accepted_species']]
+    all_v16_issue_df = all_v16_issue_df.rename(columns={'v16_chained_accepted_species': 'v16_accepted_species'})
+    direct_issue_df = direct_issue_df.rename(columns={'v16_direct_accepted_species': 'v16_accepted_species'})
+    direct_issue_df = direct_issue_df[['v16_accepted_species']]
+    all_v16_issue_df = pd.concat([all_v16_issue_df, direct_issue_df])
+    plot_native_number_accepted_taxa_in_regions(all_v16_issue_df, 'v16_accepted_species', os.path.join('outputs'),
+                                                'v16_species_issues_all.jpg', include_extinct=True, wcvp_version=None,
                                                 colormap='inferno')
 
     # global distribution of underlying population
-    v14_to_plot = v14_taxa.dropna(subset=[wcvp_accepted_columns['species']])
-    v14_to_plot = v14_to_plot[~v14_to_plot[wcvp_accepted_columns['species']].isin(
-        ['Hieracium kuekenthalianum', 'Fagus moesiaca', 'Cheniella quinnanensis', 'Thymus × saxicola', 'Globulea atropurpurea'])]
+    v16_to_plot = v16_taxa.dropna(subset=[wcvp_accepted_columns['species']])
+    v16_to_plot = v16_to_plot[~v16_to_plot[wcvp_accepted_columns['species']].isin(
+        ['Hieracium kuekenthalianum', 'Fagus moesiaca', 'Cheniella quinnanensis', 'Thymus × saxicola', 'Globulea atropurpurea',
+         'Lachnagrostis adamsonii', 'Hibiscus brackenridgei'])]
 
-    plot_native_number_accepted_taxa_in_regions(v14_to_plot, wcvp_accepted_columns['species'], os.path.join('outputs'),
-                                                'underlying_species_distributions_v14.jpg', include_extinct=True, wcvp_version=None,
+    plot_native_number_accepted_taxa_in_regions(v16_to_plot, wcvp_accepted_columns['species'], os.path.join('outputs'),
+                                                'underlying_species_distributions_v16.jpg', include_extinct=True, wcvp_version=None,
                                                 colormap='inferno')
 
 
 def get_analysis_data():
     x_var = 'Accepted Species'
     y_var = 'Species that may be incorrectly resolved to'
-    issue_region_counts = pd.read_csv(os.path.join('outputs', 'v14_species_issues_chained.jpg_regions.csv'), index_col=0)
+    issue_region_counts = pd.read_csv(os.path.join('outputs', 'v16_species_issues_chained.jpg_regions.csv'), index_col=0)
     issue_region_counts = issue_region_counts.rename(columns={'Number of Taxa': y_var})
-    underlying_species_region_counts = pd.read_csv(os.path.join('outputs', 'underlying_species_distributions_v14.jpg_regions.csv'), index_col=0)
+    underlying_species_region_counts = pd.read_csv(os.path.join('outputs', 'underlying_species_distributions_v16.jpg_regions.csv'), index_col=0)
     underlying_species_region_counts = underlying_species_region_counts.rename(columns={'Number of Taxa': x_var})
 
     analysis_df = pd.merge(issue_region_counts, underlying_species_region_counts, on='Region')
@@ -215,7 +217,7 @@ def plot_annotated_regression_data(data, outpath, x_var, y_var):
     for _, row in highlighted_data.iterrows():
         upshift = 0
         left_shift = 0
-        if row['Region'] in ['FRA', 'SPA', 'ITA', 'MDG', 'WAU']:
+        if row['Region'] in ['FRA', 'SPA', 'ITA', 'MDG', 'WAU', 'CPP']:
             #         upshift = 0
             #         left_shift = 0.05
             #         if row['Group'] in ['ALD', 'SEY']:
@@ -324,7 +326,7 @@ def plot_dist_of_metric(df_with_region_data, metric, colormap: str = 'inferno', 
 
 
 def main():
-    plot_names_with_issues()
+    # plot_names_with_issues()
     analyse_region_count_data()
 
 

@@ -15,9 +15,9 @@ def get_discrepancy_results_for_pair(folder, taxonomy_name:str):
     return disagreements_df
 
 def main():
-    v10_taxa, v11_taxa, v12_taxa, v13_taxa, v14_taxa = get_all_databases()
+    v10_taxa, v11_taxa, v12_taxa, v13_taxa, v14_taxa, v15_taxa, v16_taxa = get_all_databases()
 
-    folder = 'v10_v14'
+    folder = 'v10_v16'
     discrepancy_results = get_discrepancy_results_for_pair(folder, 'wcvp')
     v10_where_discrepancies_arise = v10_taxa[v10_taxa['taxon_name_w_authors'].isin(discrepancy_results['taxon_name_w_authors'].values)]
     homoytpic_synonyms = v10_where_discrepancies_arise[v10_where_discrepancies_arise['homotypic_synonym'] == 'T']

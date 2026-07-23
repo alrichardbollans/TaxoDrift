@@ -1,0 +1,12 @@
+accepted_ipni_id,accepted_name,accepted_name_w_author,accepted_family,accepted_rank,accepted_parent,accepted_parent_w_author,accepted_parent_id,accepted_parent_ipni_id,accepted_parent_rank,plant_name_id,ipni_id,taxon_rank,taxon_status,family,genus_hybrid,genus,species_hybrid,species,infraspecific_rank,infraspecies,parenthetical_author,primary_author,publication_author,place_of_publication,volume_and_page,first_published,nomenclatural_remarks,geographic_area,lifeform_description,climate_description,taxon_name,taxon_authors,accepted_plant_name_id,basionym_plant_name_id,replaced_synonym_author,homotypic_synonym,parent_plant_name_id,powo_id,hybrid_formula,reviewed,accepted_species,accepted_species_w_author,accepted_species_ipni_id,accepted_species_id,taxon_name_w_authors
+57,57,57,57,57,53,53,53.0,53,53,57.0,53,57,57,57,0,57,0,54,17,17,24,57,8,57,57,57,23,7,5,6,57,57,57.0,46.0,22,57,0.0,57,0,57,53,53,53,53.0,57
+46,46,46,35,3,41,41,,41,2,,53,5,4,35,0,51,0,50,3,16,19,52,7,51,57,50,5,7,4,4,57,54,,,16,1,,57,0,2,42,42,42,,57
+77165454-1,Phragmipedium schlimii var. manzurii,Phragmipedium schlimii var. manzurii (W.E.Higgins & Viveros) P.J.Cribb,Orchidaceae,Species,Phragmipedium schlimii,Phragmipedium schlimii (Linden ex Rchb.f.) Rolfe,,987638-1,Genus,,77270313-1,Species,Synonym,Orchidaceae,,Phragmipedium,,coeruleum,var.,rotundifolium,L.,Kuntze,J.D.Hooker,Revis. Gen. Pl., 5: 57,(1891),", nom. superfl.",Colombia (Santander),perennial,seasonally dry tropical,Chlorophytum gramineum var. madagascariense,C.B.Clarke,,,L.,T,,77270313-1,,N,Lotus herbaceus,Lotus herbaceus (Vill.) Jauzein,77109688-1,,Chlorophytum gramineum var. madagascariense (Baker) H.Perrier
+2,2,2,6,46,2,2,,2,46,,1,37,35,6,,2,,2,10,2,3,3,2,4,1,4,16,1,2,2,1,2,,,6,57,,1,,33,2,2,2,,1
+,,,,,,,1784127.7735849055,,,1912425.298245614,,,,,,,,,,,,,,,,,,,,,,,1875764.6842105263,1796856.0,,,,,,,,,,1800788.9433962265,
+,,,,,,,1209772.3246197489,,,1197399.480117254,,,,,,,,,,,,,,,,,,,,,,,1188260.1764941008,1207610.4660794851,,,,,,,,,,1225720.1328573278,
+,,,,,,,115513.0,,,102746.0,,,,,,,,,,,,,,,,,,,,,,,115572.0,22101.0,,,,,,,,,,115572.0,
+,,,,,,,450686.0,,,466418.0,,,,,,,,,,,,,,,,,,,,,,,479829.0,452267.5,,,,,,,,,,387255.0,
+,,,,,,,2364768.0,,,2591915.0,,,,,,,,,,,,,,,,,,,,,,,2424185.0,2512082.0,,,,,,,,,,2424185.0,
+,,,,,,,2789630.0,,,2833357.0,,,,,,,,,,,,,,,,,,,,,,,2868518.0,2749505.0,,,,,,,,,,2868518.0,
+,,,,,,,3189878.0,,,3275451.0,,,,,,,,,,,,,,,,,,,,,,,3178021.0,3231869.0,,,,,,,,,,3169652.0,
